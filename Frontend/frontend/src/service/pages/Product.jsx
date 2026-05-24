@@ -1,4 +1,11 @@
+import { useState } from "react"
+import Carrinho from "../../Components/Carrinho";
+
 function Product(){
+
+    const [carrinho, setCarrinho] = useState([]);
+    const total = carrinho.reduce((acc, item) => acc + item.price, 0);
+
 
     const product = [
         {
@@ -16,7 +23,11 @@ function Product(){
             name: "Pudim de Leite Ninho",
             price: 15
         }
-    ]
+    ];
+
+    function adicionarProduct(product){
+        setCarrinho([...carrinho, product]);
+    }
 
     return(
         <div style={{ padding: "30px"}}>
@@ -41,18 +52,24 @@ function Product(){
                         }}
 
                     >
-                        <h2>{product.price}</h2>
+                        <h2>{product.name}</h2>
                         <p>
                             R$ {product.price}
                         </p>
-                        <button>
+                        <button onClick={() => adicionarProduct(product)}>
                             Adicionar
                         </button>
+
                     </div>
                 ))}
             </div>
+
+            <Carrinho
+                carrinho={carrinho}
+                total={total}/>
+            
         </div>
     )
 }
 
-export default Product
+export default Product;
