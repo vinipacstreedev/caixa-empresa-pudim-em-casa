@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Carrinho from "../../Components/Carrinho";
+import api from "../api";
 
 function Product() {
 
@@ -27,6 +28,31 @@ function Product() {
 
     function adicionarProduct(product) {
         setCarrinho([...carrinho, product]);
+    }
+
+    function removerCarrinho(id) {
+        const novoCarrinho = carrinho.filter(item => item.id !== id);
+        setCarrinho(novoCarrinho);
+    }
+
+    async function finalizarVenda() {
+        if (carrinho.length === 0) {
+            alert("Adicione pelo menos um produto ao carrinho.");
+            return;
+        }
+
+        try {
+            await api.post("/vendas", {
+                total: total
+            });
+
+            alert("Venda finalizada e salva com sucesso!");
+            setCarrinho([]);
+
+        } catch (error) {
+            console.error(error);
+            alert("Erro ao finalizar venda.");
+        }
     }
 
     return (
@@ -78,7 +104,10 @@ function Product() {
 
             <Carrinho
                 carrinho={carrinho}
-                total={total} />
+                total={total}
+                removerCarrinho={removerCarrinho}
+                finalizarVenda={finalizarVenda}
+            />
 
         </div>
     )
